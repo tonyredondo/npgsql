@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - 'hotfix/**'
+      - 'tony/**'
     tags:
       - '*'
   pull_request:
@@ -69,6 +70,10 @@ jobs:
           dotnet-version: |
             ${{ env.dotnet_sdk_version }}
             3.1.x
+
+      - name: Install dd-trace tool
+        run: dotnet tool update -g dd-trace
+        shell: bash
 
       - name: Build
         run: dotnet build -c ${{ matrix.config }}

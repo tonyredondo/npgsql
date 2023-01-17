@@ -17,6 +17,12 @@ env:
   # Windows comes with PG pre-installed, and defines the PGPASSWORD environment variable. Remove it as it interferes
   # with some of our tests
   PGPASSWORD: ""
+  DD_SERVICE: npgsql
+  DD_CIVISIBILITY_AGENTLESS_ENABLED: 1
+  DD_API_KEY: ${{ secrets.DD_API_KEY }}
+  DD_APPLICATION_KEY: ${{ secrets.DD_APPLICATION_KEY }}
+  DD_SITE: ${{ secrets.DD_SITE }}
+  DD_ENV: ci
 
 jobs:
   build:
@@ -306,16 +312,16 @@ jobs:
       # TODO: Once test/Npgsql.Specification.Tests work, switch to just testing on the solution
       - name: Test
         run: |
-            dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.Tests --logger "GitHubActions;report-warnings=false"
-            dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.DependencyInjection.Tests --logger "GitHubActions;report-warnings=false"
+            dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.Tests --logger "GitHubActions;report-warnings=false"
+            dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.DependencyInjection.Tests --logger "GitHubActions;report-warnings=false"
         shell: bash
 
       - name: Test Plugins
         if: "!startsWith(matrix.os, 'macos')"
         run: |
             if [ -z "${{ matrix.pg_prerelease }}" ]; then
-                dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.PluginTests --logger "GitHubActions;report-warnings=false"
-                dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.NodaTime.Tests --logger "GitHubActions;report-warnings=false"
+                dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.PluginTests --logger "GitHubActions;report-warnings=false"
+                dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.NodaTime.Tests --logger "GitHubActions;report-warnings=false"
             fi
         shell: bash
 

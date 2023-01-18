@@ -318,14 +318,10 @@ jobs:
       - name: Test
         run: |
             cd  ./test/Npgsql.Tests
-            mkdir logs
             dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} --logger "GitHubActions;report-warnings=false"
-            cp ./logs/* ../../logs
             cd ../..
             cd  ./test/Npgsql.DependencyInjection.Tests
-            mkdir logs
             dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} --logger "GitHubActions;report-warnings=false"
-            cp ./logs/* ../../logs
             cd ../..
             
         shell: bash
@@ -339,12 +335,12 @@ jobs:
             fi
         shell: bash
 
-      - name: Archive tracer logs
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: tracer_logs_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
-          path: ./logs
+#      - name: Archive tracer logs
+#        if: ${{ always() }}
+#        uses: actions/upload-artifact@v2
+#        with:
+#          name: tracer_logs_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
+#          path: ./logs
           
       - name: Archive tracer logs 2
         if: "startsWith(matrix.os, 'windows')"

@@ -25,7 +25,7 @@ env:
   DD_SITE: ${{ secrets.DD_SITE }}
   DD_ENV: ci
   # DD_TRACE_LOG_DIRECTORY: ./logs
-  DD_TRACE_DEBUG: 1
+  DD_TRACE_DEBUG: 0
   DD_CIVISIBILITY_ITR_ENABLED: 1
 
 jobs:

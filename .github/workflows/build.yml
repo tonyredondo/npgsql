@@ -345,6 +345,27 @@ jobs:
         with:
           name: tracer_logs_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
           path: ./logs
+          
+      - name: Archive tracer logs 2
+        if: "startsWith(matrix.os, 'windows')"
+        uses: actions/upload-artifact@v2
+        with:
+          name: tracer_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
+          path: C:\ProgramData\Datadog .NET Tracer\logs\
+
+      - name: Archive tracer logs 2
+        if: "startsWith(matrix.os, 'ubuntu')"
+        uses: actions/upload-artifact@v2
+        with:
+          name: tracer_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
+          path: /var/log/datadog/dotnet/
+
+      - name: Archive tracer logs 2
+        if: "startsWith(matrix.os, 'macos')"
+        uses: actions/upload-artifact@v2
+        with:
+          name: tracer_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
+          path: /var/log/datadog/dotnet/
 
       - id: analyze_tag
         name: Analyze tag

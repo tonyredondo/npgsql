@@ -24,6 +24,7 @@ env:
   DD_APPLICATION_KEY: ${{ secrets.DD_APPLICATION_KEY }}
   DD_SITE: ${{ secrets.DD_SITE }}
   DD_ENV: ci
+  DD_TRACE_LOG_DIRECTORY: ./logs
 
 jobs:
   build:
@@ -79,7 +80,9 @@ jobs:
             3.1.x
 
       - name: Install dd-trace tool
-        run: dotnet tool update -g dd-trace
+        run: |
+          dotnet tool update -g dd-trace
+          mkdir logs
         shell: bash
 
       - name: Build
@@ -315,10 +318,13 @@ jobs:
         run: |
             cd  ./test/Npgsql.Tests
             dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} --logger "GitHubActions;report-warnings=false"
+            dir ./logs
             cd ../..
             cd  ./test/Npgsql.DependencyInjection.Tests
             dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} --logger "GitHubActions;report-warnings=false"
+            dir ./logs
             cd ../..
+            
         shell: bash
 
       - name: Test Plugins

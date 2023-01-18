@@ -317,12 +317,14 @@ jobs:
       - name: Test
         run: |
             cd  ./test/Npgsql.Tests
+            mkdir logs
             dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} --logger "GitHubActions;report-warnings=false"
-            dir ./logs
+            cp ./logs/* ../../logs
             cd ../..
             cd  ./test/Npgsql.DependencyInjection.Tests
+            mkdir logs
             dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} --logger "GitHubActions;report-warnings=false"
-            dir ./logs
+            cp ./logs/* ../../logs
             cd ../..
             
         shell: bash
@@ -335,6 +337,13 @@ jobs:
                 dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.NodaTime.Tests --logger "GitHubActions;report-warnings=false"
             fi
         shell: bash
+
+      - name: Archive tracer logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: tracer_logs_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}
+          path: ./logs
 
       - id: analyze_tag
         name: Analyze tag

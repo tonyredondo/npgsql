@@ -24,7 +24,7 @@ env:
   DD_APPLICATION_KEY: ${{ secrets.DD_APPLICATION_KEY }}
   DD_SITE: ${{ secrets.DD_SITE }}
   DD_ENV: ci
-  DD_TRACE_LOG_DIRECTORY: ./logs
+  # DD_TRACE_LOG_DIRECTORY: ./logs
   DD_TRACE_DEBUG: 1
 
 jobs:

@@ -343,7 +343,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: tracer_logs_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}
+          name: tracer_logs_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
           path: ./logs
 
       - id: analyze_tag

@@ -26,6 +26,7 @@ env:
   DD_ENV: ci
   # DD_TRACE_LOG_DIRECTORY: ./logs
   DD_TRACE_DEBUG: 1
+  DD_CIVISIBILITY_ITR_ENABLED=1
 
 jobs:
   build:
@@ -150,6 +151,9 @@ jobs:
 
           # user 'npgsql_tests_scram' must be created with password encrypted as scram-sha-256 (which only applies after restart)
           sudo -u postgres psql -c "CREATE USER npgsql_tests_scram SUPERUSER PASSWORD 'npgsql_tests_scram'"
+          
+          sudo mkdir -p /var/log/datadog/dotnet/
+          sudo chmod 777 /var/log/datadog/dotnet
           
       # Uncomment the following to SSH into the agent running the build (https://github.com/mxschmitt/action-tmate)
       #- uses: actions/checkout@v3
@@ -313,6 +317,10 @@ jobs:
                 sleep 5
             done
             psql -c "CREATE USER npgsql_tests_scram SUPERUSER PASSWORD 'npgsql_tests_scram'" postgres
+            
+            
+            sudo mkdir -p /var/log/datadog/dotnet/
+            sudo chmod 777 /var/log/datadog/dotnet
 
       # TODO: Once test/Npgsql.Specification.Tests work, switch to just testing on the solution
       - name: Test

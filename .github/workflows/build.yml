@@ -26,7 +26,7 @@ env:
   DD_ENV: ci
   # DD_TRACE_LOG_DIRECTORY: ./logs
   DD_TRACE_DEBUG: 1
-  DD_CIVISIBILITY_ITR_ENABLED: 1
+  #DD_CIVISIBILITY_ITR_ENABLED: 1
 
 jobs:
   build:
@@ -81,11 +81,22 @@ jobs:
             ${{ env.dotnet_sdk_version }}
             3.1.x
 
-      - name: Install dd-trace tool
+#      - name: Install dd-trace tool
+#        run: |
+#          dotnet tool update -g dd-trace
+#          mkdir logs
+#        shell: bash
+        
+      - name: Install dd-trace dotnet tool
+        shell: pwsh
         run: |
-          dotnet tool update -g dd-trace
-          mkdir logs
-        shell: bash
+          $ProgressPreference = 'SilentlyContinue'
+          $base_url = "https://apmdotnetci.blob.core.windows.net/apm-dotnet-ci-artifacts-master"
+          $sha = (Invoke-WebRequest $base_url/sha.txt).Content.Trim()
+          $version = (Invoke-WebRequest $base_url/version.txt).Content.Trim()
+          $url = "$($base_url)/$($sha)/dd-trace.$($version).nupkg"
+          Invoke-WebRequest -Uri $url -OutFile dd-trace.$($version).nupkg
+          dotnet tool update -g dd-trace --add-source ./
 
       - name: Build
         run: dotnet build -c ${{ matrix.config }}

@@ -93,7 +93,10 @@ jobs:
           $sha = (Invoke-WebRequest $base_url/sha.txt).Content.Trim()
           $version = (Invoke-WebRequest $base_url/version.txt).Content.Trim()
           $url = "$($base_url)/$($sha)/dd-trace.$($version).nupkg"
+          echo "Downloading..."
+          echo $url
           Invoke-WebRequest -Uri $url -OutFile dd-trace.$($version).nupkg
+          echo "Intalling..."
           dotnet tool update -g dd-trace --add-source ./
 
       - name: Build

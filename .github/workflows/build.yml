@@ -90,11 +90,11 @@ jobs:
           echo "Downloading..."
           echo $url
           Invoke-WebRequest -Uri $url -OutFile dd-trace.$($version).nupkg
+          dotnet tool update -g --no-cache dd-trace --version 2.22.0 --add-source ./
 
       - name: Install dd-trace tool
         run: |
           ls
-          dotnet tool update -g dd-trace --add-source ./
         shell: bash
 
       - name: Build

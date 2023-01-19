@@ -82,6 +82,7 @@ jobs:
       - name: Install dd-trace dotnet tool
         shell: pwsh
         run: |
+          cd ..
           $ProgressPreference = 'SilentlyContinue'
           $base_url = "https://apmdotnetci.blob.core.windows.net/apm-dotnet-ci-artifacts-master"
           $sha = (Invoke-WebRequest $base_url/sha.txt).Content.Trim()
@@ -90,7 +91,7 @@ jobs:
           echo "Downloading..."
           echo $url
           Invoke-WebRequest -Uri $url -OutFile dd-trace.$($version).nupkg
-          dotnet tool update -g --no-cache dd-trace --version 2.22.0 --add-source ./
+          dotnet tool update -g --no-cache dd-trace --add-source ./
 
       - name: Install dd-trace tool
         run: |

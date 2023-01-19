@@ -96,6 +96,7 @@ jobs:
           echo "Downloading..."
           echo $url
           Invoke-WebRequest -Uri $url -OutFile dd-trace.$($version).nupkg
+          dir
           echo "Intalling..."
           dotnet tool update -g dd-trace --add-source ./
 

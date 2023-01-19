@@ -336,13 +336,8 @@ jobs:
       # TODO: Once test/Npgsql.Specification.Tests work, switch to just testing on the solution
       - name: Test
         run: |
-            cd  ./test/Npgsql.Tests
-            dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} --logger "GitHubActions;report-warnings=false"
-            cd ../..
-            cd  ./test/Npgsql.DependencyInjection.Tests
-            dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} --logger "GitHubActions;report-warnings=false"
-            cd ../..
-            
+            dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.Tests --logger "GitHubActions;report-warnings=false"
+            dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.DependencyInjection.Tests --logger "GitHubActions;report-warnings=false"
         shell: bash
 
       - name: Test Plugins
@@ -362,24 +357,24 @@ jobs:
 #          path: ./logs
           
       - name: Archive tracer logs 2
-        if: "startsWith(matrix.os, 'windows')"
+        if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: tracer_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
+          name: windows_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
           path: C:\ProgramData\Datadog .NET Tracer\logs\
 
       - name: Archive tracer logs 2
-        if: "startsWith(matrix.os, 'ubuntu')"
+        if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: tracer_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
+          name: linux_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
           path: /var/log/datadog/dotnet/
 
       - name: Archive tracer logs 2
-        if: "startsWith(matrix.os, 'macos')"
+        if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: tracer_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
+          name: mac_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
           path: /var/log/datadog/dotnet/
 
       - id: analyze_tag

@@ -79,12 +79,6 @@ jobs:
             ${{ env.dotnet_sdk_version }}
             3.1.x
 
-#      - name: Install dd-trace tool
-#        run: |
-#          dotnet tool update -g dd-trace
-#          mkdir logs
-#        shell: bash
-        
       - name: Install dd-trace dotnet tool
         shell: pwsh
         run: |
@@ -96,9 +90,12 @@ jobs:
           echo "Downloading..."
           echo $url
           Invoke-WebRequest -Uri $url -OutFile dd-trace.$($version).nupkg
-          Get-ChildItem -Force
-          echo "Intalling..."
+
+      - name: Install dd-trace tool
+        run: |
+          ls
           dotnet tool update -g dd-trace --add-source ./
+        shell: bash
 
       - name: Build
         run: dotnet build -c ${{ matrix.config }}

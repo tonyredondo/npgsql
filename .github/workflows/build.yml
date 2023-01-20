@@ -367,14 +367,7 @@ jobs:
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          name: linux_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
-          path: /var/log/datadog/dotnet/
-
-      - name: Archive tracer logs 2
-        if: ${{ always() }}
-        uses: actions/upload-artifact@v2
-        with:
-          name: mac_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
+          name: nonwindows_logs2_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
           path: /var/log/datadog/dotnet/
 
       - id: analyze_tag

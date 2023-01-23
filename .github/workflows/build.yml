@@ -24,7 +24,7 @@ env:
   DD_APPLICATION_KEY: ${{ secrets.DD_APPLICATION_KEY }}
   DD_SITE: ${{ secrets.DD_SITE }}
   DD_ENV: ci
-  DD_TRACE_DEBUG: 1
+  DD_TRACE_DEBUG: 0
   DD_CIVISIBILITY_CODE_COVERAGE_SNK_FILEPATH: /home/runner/work/npgsql/npgsql/Npgsql.snk
 
 jobs:

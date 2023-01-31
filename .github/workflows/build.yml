@@ -24,7 +24,6 @@ env:
   DD_SITE: ${{ secrets.DD_SITE }}
   DD_ENV: ci
   DD_TRACE_DEBUG: 0
-  DD_CIVISIBILITY_CODE_COVERAGE_SNK_FILEPATH: /home/runner/work/npgsql/npgsql/Npgsql.snk
 
 jobs:
   build:
@@ -42,14 +41,19 @@ jobs:
             pg_major: 15
             config: Debug
             test_tfm: net7.0
+            snk: /home/runner/work/npgsql/npgsql/Npgsql.snk
           - os: ubuntu-22.04
             pg_major: 15
             config: Release
             test_tfm: netcoreapp3.1
+            snk: /home/runner/work/npgsql/npgsql/Npgsql.snk
           - os: macos-12
             pg_major: 14
             config: Release
             test_tfm: net7.0
+            snk: /Users/runner/work/npgsql/npgsql/Npgsql.snk
+          - os: windows-2022
+            snk: D:\a\npgsql\npgsql\Npgsql.snk
 #          - os: ubuntu-22.04
 #            pg_major: 15
 #            config: Release
@@ -338,6 +342,8 @@ jobs:
         run: |
             dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.Tests --logger "GitHubActions;report-warnings=false"
             dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.DependencyInjection.Tests --logger "GitHubActions;report-warnings=false"
+        env:
+          DD_CIVISIBILITY_CODE_COVERAGE_SNK_FILEPATH: ${{ matrix.snk }}
         shell: bash
 
       - name: Test Plugins
@@ -347,15 +353,10 @@ jobs:
                 dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.PluginTests --logger "GitHubActions;report-warnings=false"
                 dd-trace ci run -- dotnet test -c ${{ matrix.config }} -f ${{ matrix.test_tfm }} test/Npgsql.NodaTime.Tests --logger "GitHubActions;report-warnings=false"
             fi
+        env:
+          DD_CIVISIBILITY_CODE_COVERAGE_SNK_FILEPATH: ${{ matrix.snk }}
         shell: bash
 
-#      - name: Archive tracer logs
-#        if: ${{ always() }}
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: tracer_logs_${{ matrix.config }}_${{ matrix.test_tfm }}_${{ matrix.os }}_${{ matrix.pg_major}}
-#          path: ./logs
-          
       - name: Archive tracer logs 2
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
